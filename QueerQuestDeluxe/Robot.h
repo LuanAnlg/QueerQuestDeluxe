@@ -44,7 +44,7 @@ public:
         case formlib::Direcciones::Abajo:
             rectanguloColision.Y += velocidad.y;
             // Si el robot sale del borde inferior, teletransportarlo al borde superior
-            if (rectanguloColision.Y > graphics->VisibleClipBounds.Height) {
+            if (rectanguloColision.Bottom > graphics->VisibleClipBounds.Height) {
                 rectanguloColision.Y = 0;
             }
             break;

@@ -3,8 +3,6 @@
 #include "Grupo.h"
 #include "Enemigo.h"
 
-#include <iostream>
-
 namespace QueerQuestDeluxe {
 
     using namespace System;
@@ -17,7 +15,6 @@ namespace QueerQuestDeluxe {
     public ref class Juego : public System::Windows::Forms::Form {
 
     public:
-
         Juego(void) {
             InitializeComponent();
 
@@ -27,6 +24,7 @@ namespace QueerQuestDeluxe {
 
             // Cargar sprites
             spritePersonajes = gcnew Bitmap("Sprites\\Personajes.png");
+            spriteFondo = gcnew Bitmap("Sprites\\Fondo_Facil.png");
 
             // Crear grupo de personajes
             grupo = new Grupo({ static_cast<float>(6 * formlib::getCelda()), static_cast<float>(3 * formlib::getCelda()) }, spritePersonajes);
@@ -36,42 +34,38 @@ namespace QueerQuestDeluxe {
                                               static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Bottom - formlib::getCelda())) };
             enemigo = new Enemigo(enemigoPosicion, spritePersonajes);
 
+            // Crear un personaje de prueba
             test = new Personaje({ static_cast<float>(8 * formlib::getCelda()), static_cast<float>(1 * formlib::getCelda()) },
-                spritePersonajes, { 4, 5 }, { 0, 0 }, {0, 4}, 1, 1);
-            std::cout << test->getRectanguloColision().Width;
-            std::cout << "\n" << graphics->VisibleClipBounds.Width << "\n" << graphics->VisibleClipBounds.Height;
+                spritePersonajes, { 4, 5 }, { 0, 0 }, { 0, 4 }, 1, 1);
+
             // Inicializar variables adicionales
-            direcion = formlib::Direcciones::Ninguno;
+            direccion = formlib::Direcciones::Ninguno;
             temporizador = 0;
         }
 
     protected:
-
-        ~Juego()
-        {
-            if (components)
-            {
+        ~Juego() {
+            if (components) {
                 delete components;
             }
         }
 
     private:
+        // Componentes y variables de clase
         System::ComponentModel::IContainer^ components;
         System::Windows::Forms::Timer^ tiempoDelta;
-
         Graphics^ graphics;
         BufferedGraphics^ buffer;
         Bitmap^ spritePersonajes;
+        Bitmap^ spriteFondo;
         Grupo* grupo;
         Enemigo* enemigo;
         Personaje* test;
-        formlib::Direcciones direcion;
+        formlib::Direcciones direccion;
         int temporizador;
 
 #pragma region Windows Form Designer generated code
-
-        void InitializeComponent(void)
-        {
+        void InitializeComponent(void) {
             this->components = (gcnew System::ComponentModel::Container());
             this->tiempoDelta = (gcnew System::Windows::Forms::Timer(this->components));
             this->SuspendLayout();
@@ -91,7 +85,6 @@ namespace QueerQuestDeluxe {
             this->Text = L"Juego";
             this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Juego::Juego_KeyDown);
             this->ResumeLayout(false);
-
         }
 #pragma endregion
 
@@ -101,12 +94,15 @@ namespace QueerQuestDeluxe {
         // Limpiar el buffer con un color de fondo
         buffer->Graphics->Clear(formlib::P8AzulOscuro());
 
+        // Dibujar la imagen del fondo
+        buffer->Graphics->DrawImage(spriteFondo, 0, 0, this->ClientRectangle.Width, this->ClientRectangle.Height);
+
         // Incrementar el temporizador
         temporizador++;
 
         // Actualizar el grupo de personajes si ha pasado suficiente tiempo y hay una dirección válida
-        if (temporizador >= 15 && direcion != formlib::Direcciones::Ninguno) {
-            grupo->actualizar(buffer->Graphics, direcion);
+        if (temporizador >= 15 && direccion != formlib::Direcciones::Ninguno) {
+            grupo->actualizar(buffer->Graphics, direccion);
             temporizador = 0;
         }
 
@@ -114,6 +110,7 @@ namespace QueerQuestDeluxe {
         if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision())) {
             grupo->agregar(spritePersonajes, enemigo->getTipo()); // Agregar nuevo aliado al grupo
             delete enemigo; // Eliminar el enemigo actual
+
             // Crear un nuevo enemigo en una posición aleatoria dentro de los límites de la pantalla
             formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Right - formlib::getCelda())),
                                               static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Bottom - formlib::getCelda())) };
@@ -124,6 +121,7 @@ namespace QueerQuestDeluxe {
         grupo->dibujar(buffer->Graphics, spritePersonajes);
         enemigo->dibujar(buffer->Graphics, spritePersonajes);
         test->dibujar(buffer->Graphics, spritePersonajes);
+
         // Renderizar el buffer en la pantalla
         buffer->Render(graphics);
     }
@@ -132,16 +130,16 @@ namespace QueerQuestDeluxe {
     private: System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
         // Asignar dirección basada en la tecla presionada
         if (e->KeyCode == Keys::A || e->KeyCode == Keys::Left) {
-            direcion = formlib::Direcciones::Izquierda;
+            direccion = formlib::Direcciones::Izquierda;
         }
         else if (e->KeyCode == Keys::D || e->KeyCode == Keys::Right) {
-            direcion = formlib::Direcciones::Derecha;
+            direccion = formlib::Direcciones::Derecha;
         }
         else if (e->KeyCode == Keys::W || e->KeyCode == Keys::Up) {
-            direcion = formlib::Direcciones::Arriba;
+            direccion = formlib::Direcciones::Arriba;
         }
         else if (e->KeyCode == Keys::S || e->KeyCode == Keys::Down) {
-            direcion = formlib::Direcciones::Abajo;
+            direccion = formlib::Direcciones::Abajo;
         }
     }
     };
