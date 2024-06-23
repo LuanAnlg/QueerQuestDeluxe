@@ -133,6 +133,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="formlib.cpp" />
     <ClCompile Include="Juego.cpp" />
     <ClCompile Include="Preguntando.cpp" />
   </ItemGroup>

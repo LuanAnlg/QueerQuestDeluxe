@@ -2,6 +2,13 @@
 
 #include "Grupo.h"
 #include "Enemigo.h"
+#include "Trivia.h"
+
+#include "Preguntando.h"
+
+
+#include <iostream>
+
 
 namespace QueerQuestDeluxe {
 
@@ -38,6 +45,9 @@ namespace QueerQuestDeluxe {
             test = new Personaje({ static_cast<float>(8 * formlib::getCelda()), static_cast<float>(1 * formlib::getCelda()) },
                 spritePersonajes, { 4, 5 }, { 0, 0 }, { 0, 4 }, 1, 1);
 
+
+            trivia = new Trivia(formlib::Dificultades::Facil);
+
             // Inicializar variables adicionales
             direccion = formlib::Direcciones::Ninguno;
             temporizador = 0;
@@ -61,6 +71,7 @@ namespace QueerQuestDeluxe {
         Grupo* grupo;
         Enemigo* enemigo;
         Personaje* test;
+        Trivia* trivia;
         formlib::Direcciones direccion;
         int temporizador;
 
@@ -93,7 +104,7 @@ namespace QueerQuestDeluxe {
     private: System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
 
         // Limpiar el buffer con un color de fondo
-        buffer->Graphics->Clear(formlib::P8AzulOscuro());
+        buffer->Graphics->Clear(Color::Black);
 
         // Dibujar la imagen del fondo
         buffer->Graphics->DrawImage(spriteFondo, 0, 0, this->ClientRectangle.Width, this->ClientRectangle.Height);
@@ -108,9 +119,40 @@ namespace QueerQuestDeluxe {
         }
 
         // Verificar si el grupo de personajes intersecta con el enemigo
-        if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision())) {
-            grupo->agregarAliado(spritePersonajes, enemigo->getTipo()); // Agregar nuevo aliado al grupo
-            delete enemigo; // Eliminar el enemigo actual
+        if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision()) && trivia->getCantidadPreguntas() > 0) {
+            
+            
+
+
+            //--------------------TRIVIA--------------------
+            tiempoDelta->Stop();
+
+            Preguntando^ preguntando = gcnew Preguntando();
+
+            preguntando->setPreguntando(trivia->preguntar());
+
+            preguntando->ShowDialog();
+
+            switch ((preguntando->getResultado())) {
+            case formlib::Resultado::gano: 
+                grupo->agregarAliado(spritePersonajes, enemigo->getTipo()); // Agregar nuevo aliado al grupo
+                break;
+            case formlib::Resultado::perdio:
+
+                break;
+            case formlib::Resultado::sacrifico:
+                grupo->eliminarAliado();
+                break;
+            default:  break;
+            }
+
+            delete preguntando;
+
+            tiempoDelta->Start();
+            //----------------------------------------------
+            // 
+            // Eliminar el enemigo actual
+            delete enemigo;
 
             // Crear un nuevo enemigo en una posición aleatoria dentro de los límites de la pantalla
             formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
@@ -141,9 +183,6 @@ namespace QueerQuestDeluxe {
         }
         else if (e->KeyCode == Keys::S || e->KeyCode == Keys::Down) {
             direccion = formlib::Direcciones::Abajo;
-        }
-        else if (e->KeyCode == Keys::R) {
-            grupo->eliminarAliado();
         }
     }
 };

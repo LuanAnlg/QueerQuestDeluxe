@@ -50,5 +50,8 @@
     <ClCompile Include="Preguntando.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="formlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

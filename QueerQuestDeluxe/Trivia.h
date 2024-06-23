@@ -24,7 +24,7 @@ public:
         for (int i = 0; i < 15; i++) {
             std::ifstream preguntaFile;
             std::string contenido;
-            std::string ruta = "pregunta_" + rutaDificultad + "_numero_" + std::to_string(i + 1) + ".txt";
+            std::string ruta = "Preguntas\\pregunta_" + rutaDificultad + "_numero_" + std::to_string(i + 1) + ".txt";
 
             preguntaFile.open(ruta);
             if (!preguntaFile.is_open()) {

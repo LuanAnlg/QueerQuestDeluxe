@@ -1,5 +1,9 @@
 #pragma once
 
+#include "formlib.h"
+
+#include <iostream>
+
 namespace QueerQuestDeluxe {
 
 	using namespace System;
@@ -20,6 +24,21 @@ namespace QueerQuestDeluxe {
 			InitializeComponent();
 			
 
+		}
+
+		void setPreguntando(formlib::Pregunta pregunta){
+			opcion = pregunta.opcion;
+			lbl_pregunta->Text = gcnew String(pregunta.pregunta.c_str());
+			btn_opcionA->Text = gcnew String(pregunta.opcionA.c_str());
+			btn_opcionB->Text = gcnew String(pregunta.opcionB.c_str());
+			btn_opcionC->Text = gcnew String(pregunta.opcionC.c_str());
+			lbl_respuesta->Text = gcnew String(pregunta.respuesta.c_str());
+
+			std::cout << pregunta.pregunta;
+		}
+
+		formlib::Resultado getResultado() {
+			return resultado;
 		}
 
 	protected:
@@ -51,6 +70,8 @@ namespace QueerQuestDeluxe {
 		/// Required designer variable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+		formlib::Opciones opcion;
+		formlib::Resultado resultado;
 
 		void quitarPregunta() {
 			this->lbl_pregunta->Visible = false;
@@ -58,6 +79,23 @@ namespace QueerQuestDeluxe {
 			this->btn_opcionB->Visible = false;
 			this->btn_opcionC->Visible = false;
 			this->btn_opcionD->Visible = false;
+		}
+
+		void setResultado(formlib::Opciones opcionSeleccionada) {
+			if (opcion == opcionSeleccionada) {
+				resultado = formlib::Resultado::gano;
+			}
+			else if (opcionSeleccionada == formlib::Opciones::D){
+				resultado = formlib::Resultado::sacrifico;
+			}
+			else {
+				resultado = formlib::Resultado::perdio;
+			}
+		}
+
+		void mostrarRespuesta() {
+			this->lbl_respuesta->Visible = true;
+			this->btn_continuar->Visible = true;
 		}
 
 #pragma region Windows Form Designer generated code
@@ -212,37 +250,37 @@ namespace QueerQuestDeluxe {
 		}
 #pragma endregion
 	private: System::Void Preguntando_Load(System::Object^ sender, System::EventArgs^ e) {
-		this->BackColor = Color::FromArgb(255, 29, 43, 83);
-		this->lbl_pregunta->BackColor = Color::FromArgb(255, 255, 241, 232);
-		this->btn_opcionA->BackColor = Color::FromArgb(255, 41, 173, 255);
-		this->btn_opcionB->BackColor = Color::FromArgb(255, 255, 236, 39);
-		this->btn_opcionC->BackColor = Color::FromArgb(255, 255, 0, 77);
-		this->btn_opcionD->BackColor = Color::FromArgb(255, 0, 228, 54);
-		this->lbl_respuesta->BackColor = Color::FromArgb(255, 255, 119, 168);
-		this->btn_continuar->BackColor = Color::FromArgb(255, 255, 163, 0);
+		this->BackColor = formlib::P8AzulOscuro();
+		this->lbl_pregunta->BackColor = formlib::P8Blanco();
+		this->btn_opcionA->BackColor = formlib::P8Azul();
+		this->btn_opcionB->BackColor = formlib::P8Rojo();
+		this->btn_opcionC->BackColor = formlib::P8Verde();
+		this->btn_opcionD->BackColor = formlib::P8Amarillo();
+		this->lbl_respuesta->BackColor = formlib::P8Rosa();
+		this->btn_continuar->BackColor = formlib::P8Naranja();
 	}
 	private: System::Void btn_opcionA_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
-		this->lbl_respuesta->Visible = true;
-		this->btn_continuar->Visible = true;
+		setResultado(formlib::Opciones::A);
+		mostrarRespuesta();
 	}
 	private: System::Void btn_opcionB_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
-		this->lbl_respuesta->Visible = true;
-		this->btn_continuar->Visible = true;
+		setResultado(formlib::Opciones::B);
+		mostrarRespuesta();
 	}
 	private: System::Void btn_opcionC_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
-		this->lbl_respuesta->Visible = true;
-		this->btn_continuar->Visible = true;
+		setResultado(formlib::Opciones::C);
+		mostrarRespuesta();
 	}
 	private: System::Void btn_opcionD_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
-		this->lbl_respuesta->Visible = true;
-		this->btn_continuar->Visible = true;
+		setResultado(formlib::Opciones::D);
+		mostrarRespuesta();
 	}
-private: System::Void btn_continuar_Click(System::Object^ sender, System::EventArgs^ e) {
-
-}
+	private: System::Void btn_continuar_Click(System::Object^ sender, System::EventArgs^ e) {
+		this->Close();
+	}
 };
 }
