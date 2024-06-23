@@ -113,6 +113,7 @@ namespace QueerQuestDeluxe {
         formlib::Dificultades dificultad;
 
 #pragma region Windows Form Designer generated code
+
         // Método generado por el diseñador para inicializar los componentes visuales
         void InitializeComponent(void) {
             this->components = (gcnew System::ComponentModel::Container());
@@ -164,104 +165,106 @@ namespace QueerQuestDeluxe {
             this->ResumeLayout(false);
 
         }
+
 #pragma endregion
 
-    // Método que maneja el evento de actualización de tiempoDelta
-    private: System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
-        buffer->Graphics->Clear(formlib::P8AzulOscuro()); // Limpia el buffer con un color de fondo azul oscuro
-        buffer->Graphics->DrawImage(spriteFondo, 0, 0, ClientRectangle.Width, ClientRectangle.Height); // Dibuja el fondo en el buffer
+    private:
+        // Método que maneja el evento de actualización de tiempoDelta
+        System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
+            buffer->Graphics->Clear(formlib::P8AzulOscuro()); // Limpia el buffer con un color de fondo azul oscuro
+            buffer->Graphics->DrawImage(spriteFondo, 0, 0, ClientRectangle.Width, ClientRectangle.Height); // Dibuja el fondo en el buffer
 
-        temporizador++; // Incrementa el temporizador
+            temporizador++; // Incrementa el temporizador
 
-        // Actualiza el grupo de personajes si ha pasado suficiente tiempo y hay una dirección válida
-        if (temporizador >= 15 && direccion != formlib::Direcciones::Ninguno) {
-            grupo->actualizar(buffer->Graphics, direccion);
-            temporizador = 0;
-        }
-
-        // Verifica la intersección entre el grupo de personajes y el enemigo, y si hay preguntas disponibles
-        if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision()) && trivia->getCantidadPreguntas() > 0) {
-            tiempoDelta->Stop(); // Detiene el temporizador
-
-            // Muestra la ventana de preguntas
-            Preguntando^ preguntando = gcnew Preguntando();
-            preguntando->setPreguntando(trivia->preguntar());
-            preguntando->ShowDialog();
-
-            // Procesa la respuesta obtenida
-            switch (preguntando->getResultado()) {
-            case formlib::Resultado::gano:
-                grupo->agregarAliado(spritePersonajes, enemigo->getTipo()); // Agrega un aliado al grupo
-                break;
-            case formlib::Resultado::perdio:
-                cantidadVidas--; // Reduce la cantidad de vidas
-                break;
-            case formlib::Resultado::sacrifico:
-                if (grupo->getCantidadAliados() <= 0) {
-                    cantidadVidas--; // Reduce vidas si no hay aliados para sacrificar
-                }
-                else {
-                    grupo->eliminarAliado(); // Elimina un aliado del grupo
-                }
-                break;
-            default:
-                break;
+            // Actualiza el grupo de personajes si ha pasado suficiente tiempo y hay una dirección válida
+            if (temporizador >= 15 && direccion != formlib::Direcciones::Ninguno) {
+                grupo->actualizar(buffer->Graphics, direccion);
+                temporizador = 0;
             }
 
-            delete preguntando; // Libera la memoria de la ventana de preguntas
-            tiempoDelta->Start(); // Reinicia el temporizador
-
-            // Verifica si se acabaron las preguntas o las vidas para mostrar el puntaje final
-            if (trivia->getCantidadPreguntas() <= 0 || cantidadVidas <= 0) {
+            // Verifica la intersección entre el grupo de personajes y el enemigo, y si hay preguntas disponibles
+            if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision()) && trivia->getCantidadPreguntas() > 0) {
                 tiempoDelta->Stop(); // Detiene el temporizador
 
-                // Muestra la ventana de puntaje final
-                Puntaje^ puntaje = gcnew Puntaje(cantidadVidas, grupo->getCantidadAliados());
-                puntaje->ShowDialog();
-                delete puntaje; // Libera la memoria de la ventana de puntaje
+                // Muestra la ventana de preguntas
+                Preguntando^ preguntando = gcnew Preguntando();
+                preguntando->setPreguntando(trivia->preguntar());
+                preguntando->ShowDialog();
 
-                Close(); // Cierra la ventana del juego
+                // Procesa la respuesta obtenida
+                switch (preguntando->getResultado()) {
+                case formlib::Resultado::gano:
+                    grupo->agregarAliado(spritePersonajes, enemigo->getTipo()); // Agrega un aliado al grupo
+                    break;
+                case formlib::Resultado::perdio:
+                    cantidadVidas--; // Reduce la cantidad de vidas
+                    break;
+                case formlib::Resultado::sacrifico:
+                    if (grupo->getCantidadAliados() <= 0) {
+                        cantidadVidas--; // Reduce vidas si no hay aliados para sacrificar
+                    }
+                    else {
+                        grupo->eliminarAliado(); // Elimina un aliado del grupo
+                    }
+                    break;
+                default:
+                    break;
+                }
+
+                delete preguntando; // Libera la memoria de la ventana de preguntas
+                tiempoDelta->Start(); // Reinicia el temporizador
+
+                // Verifica si se acabaron las preguntas o las vidas para mostrar el puntaje final
+                if (trivia->getCantidadPreguntas() <= 0 || cantidadVidas <= 0) {
+                    tiempoDelta->Stop(); // Detiene el temporizador
+
+                    // Muestra la ventana de puntaje final
+                    Puntaje^ puntaje = gcnew Puntaje(cantidadVidas, grupo->getCantidadAliados());
+                    puntaje->ShowDialog();
+                    delete puntaje; // Libera la memoria de la ventana de puntaje
+
+                    Close(); // Cierra la ventana del juego
+                }
+
+                delete enemigo; // Libera la memoria del enemigo actual
+
+                // Genera una nueva posición aleatoria para el enemigo
+                formlib::Vec2 enemigoPosicion = {
+                    static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
+                    static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Bottom - formlib::getCelda())))
+                };
+                enemigo = new Enemigo(enemigoPosicion, spritePersonajes); // Crea un nuevo enemigo en la nueva posición
             }
 
-            delete enemigo; // Libera la memoria del enemigo actual
+            // Dibuja el grupo de personajes y el enemigo en el buffer
+            grupo->dibujar(buffer->Graphics, spritePersonajes);
+            enemigo->dibujar(buffer->Graphics, spritePersonajes);
 
-            // Genera una nueva posición aleatoria para el enemigo
-            formlib::Vec2 enemigoPosicion = {
-                static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
-                static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Bottom - formlib::getCelda())))
-            };
-            enemigo = new Enemigo(enemigoPosicion, spritePersonajes); // Crea un nuevo enemigo en la nueva posición
+            // Dibuja la interfaz de vidas y actualiza el texto de vidas
+            vidas->dibujar(buffer->Graphics, spriteInterfaz);
+            lbl_vidas->Text = "X " + cantidadVidas;
+
+            // Dibuja la interfaz de aliados y actualiza el texto de aliados
+            aliados->dibujar(buffer->Graphics, spriteInterfaz);
+            lbl_aliados->Text = "X " + gcnew String(std::to_string(grupo->getCantidadAliados()).c_str());
+
+            buffer->Render(graphics); // Renderiza el buffer en la pantalla
         }
 
-        // Dibuja el grupo de personajes y el enemigo en el buffer
-        grupo->dibujar(buffer->Graphics, spritePersonajes);
-        enemigo->dibujar(buffer->Graphics, spritePersonajes);
-
-        // Dibuja la interfaz de vidas y actualiza el texto de vidas
-        vidas->dibujar(buffer->Graphics, spriteInterfaz);
-        lbl_vidas->Text = "X " + cantidadVidas;
-
-        // Dibuja la interfaz de aliados y actualiza el texto de aliados
-        aliados->dibujar(buffer->Graphics, spriteInterfaz);
-        lbl_aliados->Text = "X " + gcnew String(std::to_string(grupo->getCantidadAliados()).c_str());
-
-        buffer->Render(graphics); // Renderiza el buffer en la pantalla
-    }
-
-    // Método que maneja el evento KeyDown para controlar el movimiento del grupo de personajes
-    private: System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
-        if (e->KeyCode == Keys::A || e->KeyCode == Keys::Left) {
-            direccion = formlib::Direcciones::Izquierda; // Movimiento a la izquierda
+        // Método que maneja el evento KeyDown para controlar el movimiento del grupo de personajes
+        System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
+            if (e->KeyCode == Keys::A || e->KeyCode == Keys::Left) {
+                direccion = formlib::Direcciones::Izquierda; // Movimiento a la izquierda
+            }
+            else if (e->KeyCode == Keys::D || e->KeyCode == Keys::Right) {
+                direccion = formlib::Direcciones::Derecha; // Movimiento a la derecha
+            }
+            else if (e->KeyCode == Keys::W || e->KeyCode == Keys::Up) {
+                direccion = formlib::Direcciones::Arriba; // Movimiento hacia arriba
+            }
+            else if (e->KeyCode == Keys::S || e->KeyCode == Keys::Down) {
+                direccion = formlib::Direcciones::Abajo; // Movimiento hacia abajo
+            }
         }
-        else if (e->KeyCode == Keys::D || e->KeyCode == Keys::Right) {
-            direccion = formlib::Direcciones::Derecha; // Movimiento a la derecha
-        }
-        else if (e->KeyCode == Keys::W || e->KeyCode == Keys::Up) {
-            direccion = formlib::Direcciones::Arriba; // Movimiento hacia arriba
-        }
-        else if (e->KeyCode == Keys::S || e->KeyCode == Keys::Down) {
-            direccion = formlib::Direcciones::Abajo; // Movimiento hacia abajo
-        }
-    }
     };
 }

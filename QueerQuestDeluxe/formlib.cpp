@@ -5,6 +5,7 @@ namespace formlib {
 
     int getAleatorio(int min, int max) {
         System::Random Aleatorio;
+        _sleep(1);
         return Aleatorio.Next(min, (max + 1));
     }
 

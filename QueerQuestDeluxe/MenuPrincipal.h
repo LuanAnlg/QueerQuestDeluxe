@@ -2,6 +2,7 @@
 
 #include "Juego.h"
 #include "Creditos.h"
+#include "Tutorial.h"
 
 namespace QueerQuestDeluxe {
 
@@ -16,14 +17,29 @@ namespace QueerQuestDeluxe {
 	public:
 		MenuPrincipal(void) {
 			InitializeComponent();
+
+			// Configura colores de los componentes
 			this->BackColor = formlib::P8AzulOscuro();
-			lbl_queerQuest->BackColor = formlib::P8MoradoOscuro();
 			lbl_queerQuest->ForeColor = formlib::P8Blanco();
 			lbl_nuevaPartida->BackColor = formlib::P8Lavanda();
 			btn_jugarFacil->BackColor = formlib::P8Rosa();
 			btn_jugarDificil->BackColor = formlib::P8Azul();
 			btn_creditos->BackColor = formlib::P8Amarillo();
 			btn_tutorial->BackColor = formlib::P8Verde();
+
+			// Inicialización de gráficos y buffer
+			graphics = CreateGraphics();
+			buffer = BufferedGraphicsManager::Current->Allocate(graphics, ClientRectangle);
+
+			// Carga los sprites necesarios
+			spritePersonajes = gcnew Bitmap("Sprites\\Personajes.png");
+
+			// Crea el robot en una posición aleatoria
+			robot = new Robot(nuevaPosicion(), spritePersonajes);
+
+			// Dirección inicial del robot
+			direccion = formlib::Direcciones::Ninguno;
+
 		}
 
 	protected:
@@ -33,23 +49,47 @@ namespace QueerQuestDeluxe {
 			}
 		}
 	private:
+		// Variables y componentes de la interfaz de usuario
 		System::Windows::Forms::Button^ btn_jugarFacil;
 		System::Windows::Forms::Button^ btn_jugarDificil;
 		System::Windows::Forms::Label^ lbl_nuevaPartida;
 		System::Windows::Forms::Label^ lbl_queerQuest;
 		System::Windows::Forms::Button^ btn_creditos;
 		System::Windows::Forms::Button^ btn_tutorial;
-		System::ComponentModel::Container^ components;
+		System::Windows::Forms::Timer^ tiempoDelta;
+		System::ComponentModel::IContainer^ components;
+		Graphics^ graphics;
+		BufferedGraphics^ buffer;
+		Bitmap^ spritePersonajes;
+		Robot* robot;
+		Enemigo* enemigo;
+		formlib::Direcciones direccion;
+
+
+		// Genera una nueva posición aleatoria dentro de los límites de la pantalla
+		formlib::Vec2 nuevaPosicion() {
+			return {
+				static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
+				static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Bottom - formlib::getCelda())))
+			};
+		}
+
+		// Genera una nueva dirección aleatoria
+		formlib::Direcciones nuevaDireccion() {
+			return static_cast<formlib::Direcciones>(formlib::getAleatorio(0, 3));
+		}
 
 #pragma region Windows Form Designer generated code
 
 		void InitializeComponent(void) {
+			this->components = (gcnew System::ComponentModel::Container());
 			this->btn_jugarFacil = (gcnew System::Windows::Forms::Button());
 			this->btn_jugarDificil = (gcnew System::Windows::Forms::Button());
 			this->lbl_nuevaPartida = (gcnew System::Windows::Forms::Label());
 			this->lbl_queerQuest = (gcnew System::Windows::Forms::Label());
 			this->btn_creditos = (gcnew System::Windows::Forms::Button());
 			this->btn_tutorial = (gcnew System::Windows::Forms::Button());
+			this->tiempoDelta = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
 			// btn_jugarFacil
@@ -95,6 +135,7 @@ namespace QueerQuestDeluxe {
 			// lbl_queerQuest
 			// 
 			this->lbl_queerQuest->Anchor = System::Windows::Forms::AnchorStyles::None;
+			this->lbl_queerQuest->BackColor = System::Drawing::Color::Transparent;
 			this->lbl_queerQuest->Font = (gcnew System::Drawing::Font(L"Consolas", 96, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lbl_queerQuest->Location = System::Drawing::Point(80, 32);
@@ -130,6 +171,12 @@ namespace QueerQuestDeluxe {
 			this->btn_tutorial->TabIndex = 5;
 			this->btn_tutorial->Text = L"Tutorial";
 			this->btn_tutorial->UseVisualStyleBackColor = true;
+			this->btn_tutorial->Click += gcnew System::EventHandler(this, &MenuPrincipal::btn_tutorial_Click);
+			// 
+			// tiempoDelta
+			// 
+			this->tiempoDelta->Enabled = true;
+			this->tiempoDelta->Tick += gcnew System::EventHandler(this, &MenuPrincipal::tiempoDelta_Tick);
 			// 
 			// MenuPrincipal
 			// 
@@ -147,21 +194,60 @@ namespace QueerQuestDeluxe {
 			this->ResumeLayout(false);
 
 		}
+
 #pragma endregion
-	private: System::Void btn_jugarFacil_Click(System::Object^ sender, System::EventArgs^ e) {
-		Juego^ juego = gcnew Juego(formlib::Dificultades::Facil);
-		juego->ShowDialog();
-		delete juego;
-	}
-	private: System::Void btn_jugarDificil_Click(System::Object^ sender, System::EventArgs^ e) {
-		Juego^ juego = gcnew Juego(formlib::Dificultades::Dificil);
-		juego->ShowDialog();
-		delete juego;
-	}
-	private: System::Void btn_creditos_Click(System::Object^ sender, System::EventArgs^ e) {
-		Creditos^ creditos = gcnew Creditos();
-		creditos->ShowDialog();
-		delete creditos;
-	}
+
+	private:
+		// Evento de clic para el botón "Facil"
+		System::Void btn_jugarFacil_Click(System::Object^ sender, System::EventArgs^ e) {
+			// Crear y mostrar el formulario de juego con dificultad fácil
+			Juego^ juego = gcnew Juego(formlib::Dificultades::Facil);
+			juego->ShowDialog();
+			delete juego; // Liberar la memoria después de cerrar el formulario
+		}
+
+		// Evento de clic para el botón "Dificil"
+		System::Void btn_jugarDificil_Click(System::Object^ sender, System::EventArgs^ e) {
+			// Crear y mostrar el formulario de juego con dificultad difícil
+			Juego^ juego = gcnew Juego(formlib::Dificultades::Dificil);
+			juego->ShowDialog();
+			delete juego; // Liberar la memoria después de cerrar el formulario
+		}
+
+		// Evento de clic para el botón "Creditos"
+		System::Void btn_creditos_Click(System::Object^ sender, System::EventArgs^ e) {
+			// Crear y mostrar el formulario de créditos
+			Creditos^ creditos = gcnew Creditos();
+			creditos->ShowDialog();
+			delete creditos; // Liberar la memoria después de cerrar el formulario
+		}
+
+		// Evento de clic para el botón "Tutorial"
+		System::Void btn_tutorial_Click(System::Object^ sender, System::EventArgs^ e) {
+			// Crear y mostrar el formulario de tutorial
+			Tutorial^ tutorial = gcnew Tutorial();
+			tutorial->ShowDialog();
+			delete tutorial; // Liberar la memoria después de cerrar el formulario
+		}
+
+		// Evento que se activa cada vez que ocurre un tick del temporizador
+		System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
+			// Limpiar el buffer de gráficos con un color de fondo azul oscuro
+			buffer->Graphics->Clear(formlib::P8AzulOscuro());
+
+			// Generar aleatoriamente una nueva dirección para el robot en algunos casos
+			if (formlib::getAleatorio(0, 2) == 0) {
+				direccion = nuevaDireccion();
+			}
+
+			// Actualizar la posición del robot en función de la dirección actual
+			robot->actualizar(graphics, direccion);
+
+			// Dibujar el robot en el buffer de gráficos usando el sprite de personajes
+			robot->dibujar(buffer->Graphics, spritePersonajes);
+
+			// Renderizar el buffer de gráficos en el panel de dibujo principal
+			buffer->Render(graphics);
+		}
 };
 }

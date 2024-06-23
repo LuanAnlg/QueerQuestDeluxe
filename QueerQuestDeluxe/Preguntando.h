@@ -169,7 +169,7 @@ namespace QueerQuestDeluxe {
 			this->btn_opcionD->Name = L"btn_opcionD";
 			this->btn_opcionD->Size = System::Drawing::Size(456, 150);
 			this->btn_opcionD->TabIndex = 4;
-			this->btn_opcionD->Text = L"D) Sacrificar a un aliado para saltar pregunta.";
+			this->btn_opcionD->Text = L"D) Desacoplar a un aliado para saltar pregunta.";
 			this->btn_opcionD->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->btn_opcionD->UseVisualStyleBackColor = true;
 			this->btn_opcionD->Click += gcnew System::EventHandler(this, &Preguntando::btn_opcionD_Click);
@@ -241,39 +241,41 @@ namespace QueerQuestDeluxe {
 			this->ResumeLayout(false);
 
 		}
+
 #pragma endregion
 
-	// Evento de clic para la opción A
-	private: System::Void btn_opcionA_Click(System::Object^ sender, System::EventArgs^ e) {
-		quitarPregunta();
-		setResultado(formlib::Opciones::A);
-		mostrarRespuesta();
-	}
+	private:
+		// Evento de clic para la opción A
+		System::Void btn_opcionA_Click(System::Object^ sender, System::EventArgs^ e) {
+			quitarPregunta();
+			setResultado(formlib::Opciones::A);
+			mostrarRespuesta();
+		}
 
-	// Evento de clic para la opción B
-	private: System::Void btn_opcionB_Click(System::Object^ sender, System::EventArgs^ e) {
-		quitarPregunta();
-		setResultado(formlib::Opciones::B);
-		mostrarRespuesta();
-	}
+		// Evento de clic para la opción B
+		System::Void btn_opcionB_Click(System::Object^ sender, System::EventArgs^ e) {
+			quitarPregunta();
+			setResultado(formlib::Opciones::B);
+			mostrarRespuesta();
+		}
 
-	// Evento de clic para la opción C
-	private: System::Void btn_opcionC_Click(System::Object^ sender, System::EventArgs^ e) {
-		quitarPregunta();
-		setResultado(formlib::Opciones::C);
-		mostrarRespuesta();
-	}
+		// Evento de clic para la opción C
+		System::Void btn_opcionC_Click(System::Object^ sender, System::EventArgs^ e) {
+			quitarPregunta();
+			setResultado(formlib::Opciones::C);
+			mostrarRespuesta();
+		}
 		   
-	// Evento de clic para la opción D
-	private: System::Void btn_opcionD_Click(System::Object^ sender, System::EventArgs^ e) {
-		quitarPregunta();
-		setResultado(formlib::Opciones::D);
-		mostrarRespuesta();
-	}
+		// Evento de clic para la opción D
+		System::Void btn_opcionD_Click(System::Object^ sender, System::EventArgs^ e) {
+			quitarPregunta();
+			setResultado(formlib::Opciones::D);
+			mostrarRespuesta();
+		}
 
-	// Evento de clic para el botón de continuar
-	private: System::Void btn_continuar_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->Close();
-	}
+		// Evento de clic para el botón de continuar
+		System::Void btn_continuar_Click(System::Object^ sender, System::EventArgs^ e) {
+			this->Close();
+		}
 	};
 }

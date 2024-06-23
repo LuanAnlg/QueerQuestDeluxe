@@ -151,15 +151,18 @@ namespace QueerQuestDeluxe {
 			this->ResumeLayout(false);
 
 		}
+
 #pragma endregion
+
+	private:
 		// Evento para cerrar el formulario
-	private: System::Void btn_terminar_Click(System::Object^ sender, System::EventArgs^ e) {
-		this->Close();
-	}
-		   // Evento para actualizar la interfaz gráfica
-	private: System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
-		vidas->dibujar(graphics, spriteInterfaz);
-		aliados->dibujar(graphics, spriteInterfaz);
-	}
-};
+		System::Void btn_terminar_Click(System::Object^ sender, System::EventArgs^ e) {
+			this->Close();
+		}
+	    // Evento para actualizar la interfaz gráfica
+		System::Void tiempoDelta_Tick(System::Object^ sender, System::EventArgs^ e) {
+			vidas->dibujar(graphics, spriteInterfaz);
+			aliados->dibujar(graphics, spriteInterfaz);
+		}
+	};
 }
