@@ -112,6 +112,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Aliado.h" />
+    <ClInclude Include="Creditos.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Enemigo.h" />
     <ClInclude Include="formlib.h" />
     <ClInclude Include="Grupo.h" />
@@ -143,6 +146,9 @@
     <ClCompile Include="MenuPrincipal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Creditos.resx">
+      <DependentUpon>Creditos.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Juego.resx">
       <DependentUpon>Juego.h</DependentUpon>
     </EmbeddedResource>
