@@ -39,9 +39,15 @@
     <ClInclude Include="Trivia.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Preguntando.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Juego.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Preguntando.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

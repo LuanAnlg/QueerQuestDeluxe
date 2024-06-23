@@ -85,6 +85,7 @@ namespace QueerQuestDeluxe {
             this->Text = L"Juego";
             this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Juego::Juego_KeyDown);
             this->ResumeLayout(false);
+
         }
 #pragma endregion
 
@@ -145,5 +146,5 @@ namespace QueerQuestDeluxe {
             grupo->eliminarAliado();
         }
     }
-    };
+};
 }
