@@ -42,15 +42,18 @@
     <ClInclude Include="Preguntando.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Puntaje.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuPrincipal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Juego.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Preguntando.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="formlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuPrincipal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

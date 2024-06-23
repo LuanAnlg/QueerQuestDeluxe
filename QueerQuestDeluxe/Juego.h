@@ -4,6 +4,7 @@
 #include "Enemigo.h"
 #include "Trivia.h"
 #include "Preguntando.h"
+#include "Puntaje.h"
 
 namespace QueerQuestDeluxe {
 
@@ -17,28 +18,31 @@ namespace QueerQuestDeluxe {
     public ref class Juego : public System::Windows::Forms::Form {
 
     public:
-        Juego(void) {
+        Juego(formlib::Dificultades dificultad) {
             InitializeComponent();
 
             // Inicialización de gráficos y buffer
             graphics = this->CreateGraphics();
             buffer = BufferedGraphicsManager::Current->Allocate(graphics, this->ClientRectangle);
 
-            // Establecer la dificultad del juego (por defecto es Dificil)
-            dificultad = formlib::Dificultades::Dificil;
-
             // Cargar sprites
             spritePersonajes = gcnew Bitmap("Sprites\\Personajes.png");
             spriteInterfaz = gcnew Bitmap("Sprites\\Interfaz.png");
-            if (dificultad == formlib::Dificultades::Facil) {
-                spriteFondo = gcnew Bitmap("Sprites\\Fondo_Facil.png");
-            }
-            else {
-                spriteFondo = gcnew Bitmap("Sprites\\Fondo_Dificil.png");
-            }
 
             // Crear grupo de personajes
             grupo = new Grupo({ static_cast<float>(6 * formlib::getCelda()), static_cast<float>(3 * formlib::getCelda()) }, spritePersonajes);
+
+            if (dificultad == formlib::Dificultades::Facil) {
+                spriteFondo = gcnew Bitmap("Sprites\\Fondo_Facil.png");
+                cantidadVidas = 3;
+                grupo->agregarAliado(spritePersonajes, formlib::Tipos::Chico);
+                grupo->agregarAliado(spritePersonajes, formlib::Tipos::Chica);
+                grupo->agregarAliado(spritePersonajes, formlib::Tipos::Chique);
+            }
+            else {
+                spriteFondo = gcnew Bitmap("Sprites\\Fondo_Dificil.png");
+                cantidadVidas = 1;
+            }
 
             // Inicialización del enemigo
             formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
@@ -51,13 +55,12 @@ namespace QueerQuestDeluxe {
             aliados = new Personaje({ static_cast<float>(3 * formlib::getCelda()), static_cast<float>(1 * (formlib::getCelda() / 2)) },
                 spriteInterfaz, { 1, 2 }, { 0, 0 }, { 0, 1 }, 1, 1);
 
-            // Inicializar trivia (actualmente solo para dificultad fácil)
-            trivia = new Trivia(formlib::Dificultades::Facil);
+            // Inicializar trivia
+            trivia = new Trivia(dificultad);
 
             // Inicializar variables adicionales
             direccion = formlib::Direcciones::Ninguno;
             temporizador = 0;
-            cantidadVidas = 3;
         }
 
     protected:
@@ -65,6 +68,16 @@ namespace QueerQuestDeluxe {
             if (components) {
                 delete components;
             }
+            delete graphics;
+            delete buffer;
+            delete spritePersonajes;
+            delete spriteInterfaz;
+            delete spriteFondo;
+            delete grupo;
+            delete enemigo;
+            delete vidas;
+            delete aliados;
+            delete trivia;
         }
 
     private:
@@ -174,7 +187,12 @@ namespace QueerQuestDeluxe {
                 cantidadVidas--; // Reducir la cantidad de vidas
                 break;
             case formlib::Resultado::sacrifico:
-                grupo->eliminarAliado();
+                if (grupo->getCantidadAliados() <= 0) {
+                    cantidadVidas--;
+                }
+                else {
+                    grupo->eliminarAliado();
+                }
                 break;
             default:  break;
             }
@@ -182,6 +200,25 @@ namespace QueerQuestDeluxe {
             delete preguntando;
             tiempoDelta->Start();
             //----------------------------------------------
+
+           
+            if (trivia->getCantidadPreguntas() <= 0 || cantidadVidas <= 0) {
+                //------------------Puntaje------------------
+                // Detener el tiempo
+                tiempoDelta->Stop();
+
+                // Crear y mostrar la ventana de puntaje
+                Puntaje^ puntaje = gcnew Puntaje(cantidadVidas, grupo->getCantidadAliados());
+                puntaje->ShowDialog();
+
+                // Cerrar la ventana de puntaje después de que el usuario interactúe con ella
+                delete puntaje;
+
+                // Cerrar la ventana actual (Juego)
+                this->Close();
+            }
+            //-----------------------------------------------
+            
 
             // Eliminar el enemigo actual
             delete enemigo;

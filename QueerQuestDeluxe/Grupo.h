@@ -14,10 +14,6 @@ public:
     Grupo(formlib::Vec2 posicion, System::Drawing::Bitmap^ hojaSprites) {
         // Crear el robot con la posición inicial y la hoja de sprites
         robot = new Robot(posicion, hojaSprites);
-
-        // Crear algunos aliados al inicio del grupo
-        aliados.push_back(new Aliado({ posicion.x - static_cast<float>(formlib::getCelda()), posicion.y }, hojaSprites, formlib::Tipos::Chico));
-        aliados.push_back(new Aliado({ posicion.x - static_cast<float>(formlib::getCelda() * 2), posicion.y }, hojaSprites, formlib::Tipos::Chica));
     }
 
     // Destructor de Grupo
@@ -50,7 +46,6 @@ public:
 
         if (aliados.empty()) {
             nuevaPosicion = { static_cast<float>(robot->getRectanguloColision().X), static_cast<float>(robot->getRectanguloColision().Y) };
-            nuevaDireccion = robot->getDireccion();
         }
         else {
             // Obtener la posición y dirección del último aliado en el grupo

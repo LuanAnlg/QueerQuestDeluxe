@@ -118,8 +118,14 @@
     <ClInclude Include="Juego.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="MenuPrincipal.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Personaje.h" />
     <ClInclude Include="Preguntando.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Puntaje.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Robot.h" />
@@ -134,15 +140,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="formlib.cpp" />
-    <ClCompile Include="Juego.cpp" />
-    <ClCompile Include="Preguntando.cpp" />
+    <ClCompile Include="MenuPrincipal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Juego.resx">
       <DependentUpon>Juego.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MenuPrincipal.resx">
+      <DependentUpon>MenuPrincipal.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Preguntando.resx">
       <DependentUpon>Preguntando.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Puntaje.resx">
+      <DependentUpon>Puntaje.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
