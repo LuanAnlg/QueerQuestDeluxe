@@ -137,7 +137,7 @@ namespace QueerQuestDeluxe {
 			this->lbl_trivia->Size = System::Drawing::Size(416, 192);
 			this->lbl_trivia->TabIndex = 2;
 			this->lbl_trivia->Text = L"Cuando converses con un \"enemigo\" visualizaras una pequena trivia, si la constest"
-				L"as bien tendras un nuevo aliado y si la constestas mal perderas una vida";
+				L"as bien tendras un nuevo aliado y si la constestas mal perderas una vida.";
 			this->lbl_trivia->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			this->lbl_trivia->Visible = false;
 			// 
@@ -151,7 +151,7 @@ namespace QueerQuestDeluxe {
 			this->lbl_desacoplar->Size = System::Drawing::Size(416, 192);
 			this->lbl_desacoplar->TabIndex = 3;
 			this->lbl_desacoplar->Text = L"Siempre puedes seleccionar la opcion D para desacoplar a un aliado de tu grupo y "
-				L"saltar la pregunta";
+				L"saltar la pregunta.";
 			this->lbl_desacoplar->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			this->lbl_desacoplar->Visible = false;
 			// 
