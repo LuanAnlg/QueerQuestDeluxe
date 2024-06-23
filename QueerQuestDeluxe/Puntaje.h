@@ -24,9 +24,9 @@ namespace QueerQuestDeluxe {
 
 			// Crear interfaz de vidas y aliados
 			vidas = new Personaje({ static_cast<float>(formlib::getCelda() / 2), static_cast<float>(formlib::getCelda()) },
-				spriteInterfaz, { 1, 2 }, { 0, 0 }, { 0, 0 }, 1, 1);
+				spriteInterfaz, { 1, 3 }, { 0, 0 }, { 0, 0 }, 1, 1);
 			aliados = new Personaje({ static_cast<float>(3 * formlib::getCelda() - (formlib::getCelda() / 2)), static_cast<float>(formlib::getCelda()) },
-				spriteInterfaz, { 1, 2 }, { 0, 0 }, { 0, 1 }, 1, 1);
+				spriteInterfaz, { 1, 3 }, { 0, 0 }, { 0, 1 }, 1, 1);
 
 			// Establecer colores y puntaje
 			this->BackColor = formlib::P8AzulOscuro();

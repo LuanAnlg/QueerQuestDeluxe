@@ -27,6 +27,8 @@ namespace QueerQuestDeluxe {
             lbl_vidas->ForeColor = formlib::P8Blanco();
             lbl_aliados->BackColor = formlib::P8Azul();
             lbl_aliados->ForeColor = formlib::P8Blanco();
+            lbl_preguntas->BackColor = formlib::P8Naranja();
+            lbl_preguntas->ForeColor = formlib::P8Blanco();
 
             // Inicialización de gráficos y buffer
             graphics = CreateGraphics();
@@ -61,9 +63,11 @@ namespace QueerQuestDeluxe {
 
             // Creación de la interfaz de vidas y aliados
             vidas = new Personaje({ 1.0f * formlib::getCelda(), 0.5f * formlib::getCelda() },
-                spriteInterfaz, { 1, 2 }, { 0, 0 }, { 0, 0 }, 1, 1);
+                spriteInterfaz, { 1, 3 }, { 0, 0 }, { 0, 0 }, 1, 1);
             aliados = new Personaje({ 3.0f * formlib::getCelda(), 0.5f * formlib::getCelda() },
-                spriteInterfaz, { 1, 2 }, { 0, 0 }, { 0, 1 }, 1, 1);
+                spriteInterfaz, { 1, 3 }, { 0, 0 }, { 0, 1 }, 1, 1);
+            preguntas = new Personaje({ 6.0f * formlib::getCelda() - (formlib::getCelda() / 2.0f), 0.5f * formlib::getCelda()},
+                spriteInterfaz, { 1, 3 }, { 0, 0 }, { 0, 2 }, 1, 1);
 
             // Inicialización de la trivia
             trivia = new Trivia(dificultad);
@@ -106,11 +110,13 @@ namespace QueerQuestDeluxe {
         Enemigo* enemigo;
         Personaje* vidas;
         Personaje* aliados;
+        Personaje* preguntas;
         Trivia* trivia;
         formlib::Direcciones direccion;
         int temporizador;
         int cantidadVidas;
-        formlib::Dificultades dificultad;
+    private: System::Windows::Forms::Label^ lbl_preguntas;
+           formlib::Dificultades dificultad;
 
 #pragma region Windows Form Designer generated code
 
@@ -120,6 +126,7 @@ namespace QueerQuestDeluxe {
             this->tiempoDelta = (gcnew System::Windows::Forms::Timer(this->components));
             this->lbl_vidas = (gcnew System::Windows::Forms::Label());
             this->lbl_aliados = (gcnew System::Windows::Forms::Label());
+            this->lbl_preguntas = (gcnew System::Windows::Forms::Label());
             this->SuspendLayout();
             // 
             // tiempoDelta
@@ -148,15 +155,28 @@ namespace QueerQuestDeluxe {
                 static_cast<System::Byte>(0)));
             this->lbl_aliados->Location = System::Drawing::Point(224, 32);
             this->lbl_aliados->Name = L"lbl_aliados";
-            this->lbl_aliados->Size = System::Drawing::Size(64, 32);
-            this->lbl_aliados->TabIndex = 1;
-            this->lbl_aliados->Text = L"X 2";
+            this->lbl_aliados->Size = System::Drawing::Size(96, 32);
+            this->lbl_aliados->TabIndex = 2;
+            this->lbl_aliados->Text = L"X 18";
+            // 
+            // lbl_preguntas
+            // 
+            this->lbl_preguntas->Anchor = System::Windows::Forms::AnchorStyles::None;
+            this->lbl_preguntas->BackColor = System::Drawing::Color::Transparent;
+            this->lbl_preguntas->Font = (gcnew System::Drawing::Font(L"Consolas", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+                static_cast<System::Byte>(0)));
+            this->lbl_preguntas->Location = System::Drawing::Point(384, 32);
+            this->lbl_preguntas->Name = L"lbl_preguntas";
+            this->lbl_preguntas->Size = System::Drawing::Size(96, 32);
+            this->lbl_preguntas->TabIndex = 2;
+            this->lbl_preguntas->Text = L"X 15";
             // 
             // Juego
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(960, 576);
+            this->Controls->Add(this->lbl_preguntas);
             this->Controls->Add(this->lbl_aliados);
             this->Controls->Add(this->lbl_vidas);
             this->Name = L"Juego";
@@ -247,6 +267,10 @@ namespace QueerQuestDeluxe {
             // Dibuja la interfaz de aliados y actualiza el texto de aliados
             aliados->dibujar(buffer->Graphics, spriteInterfaz);
             lbl_aliados->Text = "X " + gcnew String(std::to_string(grupo->getCantidadAliados()).c_str());
+
+            // Dibuja la interfaz de preguntas y actualiza el texto de preguntas
+            preguntas->dibujar(buffer->Graphics, spriteInterfaz);
+            lbl_preguntas->Text = "X " + gcnew String(std::to_string(trivia->getCantidadPreguntas()).c_str());
 
             buffer->Render(graphics); // Renderiza el buffer en la pantalla
         }
