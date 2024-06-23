@@ -2,8 +2,6 @@
 
 #include "formlib.h"
 
-#include <iostream>
-
 namespace QueerQuestDeluxe {
 
 	using namespace System;
@@ -13,66 +11,62 @@ namespace QueerQuestDeluxe {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	/// <summary>
-	/// Summary for Preguntando
-	/// </summary>
-	public ref class Preguntando : public System::Windows::Forms::Form
-	{
+	public ref class Preguntando : public System::Windows::Forms::Form {
 	public:
 		Preguntando(void)
 		{
 			InitializeComponent();
-			
-
+			resultado = formlib::Resultado::perdio;
+			ConfigurarColores();
 		}
 
-		void setPreguntando(formlib::Pregunta pregunta){
+		// Método para establecer una pregunta en la ventana
+		void setPreguntando(formlib::Pregunta pregunta) {
 			opcion = pregunta.opcion;
 			lbl_pregunta->Text = gcnew String(pregunta.pregunta.c_str());
 			btn_opcionA->Text = gcnew String(pregunta.opcionA.c_str());
 			btn_opcionB->Text = gcnew String(pregunta.opcionB.c_str());
 			btn_opcionC->Text = gcnew String(pregunta.opcionC.c_str());
 			lbl_respuesta->Text = gcnew String(pregunta.respuesta.c_str());
-
-			std::cout << pregunta.pregunta;
 		}
 
+		// Método para obtener el resultado de la pregunta
 		formlib::Resultado getResultado() {
 			return resultado;
 		}
 
 	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~Preguntando()
-		{
-			if (components)
-			{
+		~Preguntando() {
+			if (components) {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Label^ lbl_pregunta;
-	private: System::Windows::Forms::Button^ btn_opcionA;
-	private: System::Windows::Forms::Button^ btn_opcionB;
-	private: System::Windows::Forms::Button^ btn_opcionC;
-	private: System::Windows::Forms::Button^ btn_opcionD;
-	private: System::Windows::Forms::Label^ lbl_respuesta;
-	private: System::Windows::Forms::Button^ btn_continuar;
-
-
-	protected:
-
-	protected:
-
 	private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
+		// Componentes de la ventana
+		System::Windows::Forms::Label^ lbl_pregunta;
+		System::Windows::Forms::Button^ btn_opcionA;
+		System::Windows::Forms::Button^ btn_opcionB;
+		System::Windows::Forms::Button^ btn_opcionC;
+		System::Windows::Forms::Button^ btn_opcionD;
+		System::Windows::Forms::Label^ lbl_respuesta;
+		System::Windows::Forms::Button^ btn_continuar;
 		System::ComponentModel::Container ^components;
 		formlib::Opciones opcion;
 		formlib::Resultado resultado;
 
+		// Configuración de colores para los elementos visuales
+		void ConfigurarColores() {
+			this->BackColor = formlib::P8AzulOscuro();
+			lbl_pregunta->BackColor = formlib::P8Blanco();
+			btn_opcionA->BackColor = formlib::P8Azul();
+			btn_opcionB->BackColor = formlib::P8Rojo();
+			btn_opcionC->BackColor = formlib::P8Verde();
+			btn_opcionD->BackColor = formlib::P8Amarillo();
+			lbl_respuesta->BackColor = formlib::P8Rosa();
+			btn_continuar->BackColor = formlib::P8Naranja();
+		}
+
+		// Ocultar la pregunta y mostrar la respuesta
 		void quitarPregunta() {
 			this->lbl_pregunta->Visible = false;
 			this->btn_opcionA->Visible = false;
@@ -81,11 +75,12 @@ namespace QueerQuestDeluxe {
 			this->btn_opcionD->Visible = false;
 		}
 
+		// Determinar y establecer el resultado de la pregunta
 		void setResultado(formlib::Opciones opcionSeleccionada) {
 			if (opcion == opcionSeleccionada) {
 				resultado = formlib::Resultado::gano;
 			}
-			else if (opcionSeleccionada == formlib::Opciones::D){
+			else if (opcionSeleccionada == formlib::Opciones::D) {
 				resultado = formlib::Resultado::sacrifico;
 			}
 			else {
@@ -93,16 +88,15 @@ namespace QueerQuestDeluxe {
 			}
 		}
 
+		// Mostrar la respuesta y el botón de continuar
 		void mostrarRespuesta() {
 			this->lbl_respuesta->Visible = true;
 			this->btn_continuar->Visible = true;
 		}
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
+
+		// Inicialización de componentes generada automáticamente
 		void InitializeComponent(void)
 		{
 			this->lbl_pregunta = (gcnew System::Windows::Forms::Label());
@@ -244,43 +238,42 @@ namespace QueerQuestDeluxe {
 			this->Controls->Add(this->lbl_pregunta);
 			this->Name = L"Preguntando";
 			this->Text = L"Preguntando";
-			this->Load += gcnew System::EventHandler(this, &Preguntando::Preguntando_Load);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
-	private: System::Void Preguntando_Load(System::Object^ sender, System::EventArgs^ e) {
-		this->BackColor = formlib::P8AzulOscuro();
-		this->lbl_pregunta->BackColor = formlib::P8Blanco();
-		this->btn_opcionA->BackColor = formlib::P8Azul();
-		this->btn_opcionB->BackColor = formlib::P8Rojo();
-		this->btn_opcionC->BackColor = formlib::P8Verde();
-		this->btn_opcionD->BackColor = formlib::P8Amarillo();
-		this->lbl_respuesta->BackColor = formlib::P8Rosa();
-		this->btn_continuar->BackColor = formlib::P8Naranja();
-	}
+
+	// Evento de clic para la opción A
 	private: System::Void btn_opcionA_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
 		setResultado(formlib::Opciones::A);
 		mostrarRespuesta();
 	}
+
+	// Evento de clic para la opción B
 	private: System::Void btn_opcionB_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
 		setResultado(formlib::Opciones::B);
 		mostrarRespuesta();
 	}
+
+	// Evento de clic para la opción C
 	private: System::Void btn_opcionC_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
 		setResultado(formlib::Opciones::C);
 		mostrarRespuesta();
 	}
+		   
+	// Evento de clic para la opción D
 	private: System::Void btn_opcionD_Click(System::Object^ sender, System::EventArgs^ e) {
 		quitarPregunta();
 		setResultado(formlib::Opciones::D);
 		mostrarRespuesta();
 	}
+
+	// Evento de clic para el botón de continuar
 	private: System::Void btn_continuar_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->Close();
 	}
-};
+	};
 }
