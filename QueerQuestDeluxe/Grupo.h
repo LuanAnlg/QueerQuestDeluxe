@@ -2,13 +2,12 @@
 
 #include "Robot.h"
 #include "Aliado.h"
-
 #include <vector>
 
 class Grupo {
 private:
-    Robot* robot;
-    std::vector<Aliado*> aliados;
+    Robot* robot;                    // Objeto Robot del grupo
+    std::vector<Aliado*> aliados;    // Vector de aliados del grupo
 
 public:
     // Constructor de Grupo
@@ -38,12 +37,26 @@ public:
         return *robot;
     }
 
+    // Método para obtener la cantidad de aliados en el grupo
+    int getCantidadAliados() const {
+        return static_cast<int>(aliados.size());
+    }
 
     // Método para agregar un nuevo aliado al grupo
-    void agregar(System::Drawing::Bitmap^ hojaSprites, formlib::Tipos tipo) {
-        // Obtener la posición y dirección del último aliado en el grupo
-        formlib::Vec2 nuevaPosicion = { static_cast<float>(aliados.back()->getRectanguloColision().X), static_cast<float>(aliados.back()->getRectanguloColision().Y) };
-        formlib::Direcciones nuevaDireccion = aliados.back()->getDireccion();
+    void agregarAliado(System::Drawing::Bitmap^ hojaSprites, formlib::Tipos tipo) {
+        // Verificar si el grupo está vacío para calcular la posición inicial
+        formlib::Vec2 nuevaPosicion;
+        formlib::Direcciones nuevaDireccion = formlib::Direcciones::Ninguno;
+
+        if (aliados.empty()) {
+            nuevaPosicion = { static_cast<float>(robot->getRectanguloColision().X), static_cast<float>(robot->getRectanguloColision().Y) };
+            nuevaDireccion = robot->getDireccion();
+        }
+        else {
+            // Obtener la posición y dirección del último aliado en el grupo
+            nuevaPosicion = { static_cast<float>(aliados.back()->getRectanguloColision().X), static_cast<float>(aliados.back()->getRectanguloColision().Y) };
+            nuevaDireccion = aliados.back()->getDireccion();
+        }
 
         // Calcular la nueva posición y dirección para el nuevo aliado
         switch (nuevaDireccion) {
@@ -67,29 +80,40 @@ public:
         aliados.push_back(new Aliado(nuevaPosicion, hojaSprites, tipo));
     }
 
+    // Método para eliminar al último aliado del grupo
+    void eliminarAliado() {
+        if (!aliados.empty()) {
+            delete aliados.back();
+            aliados.pop_back();
+        }
+    }
+
     // Método para actualizar la posición y dirección de los aliados y del robot
     void actualizar(System::Drawing::Graphics^ graphics, formlib::Direcciones direccion) {
         // Actualizar la dirección del robot
         robot->setDireccion(direccion);
 
-        // Mover a los aliados
-        for (int i = static_cast<int>(aliados.size()) - 1; i >= 1; --i) {
-            // Obtener la posición y dirección del aliado anterior
-            formlib::Vec2 nuevaPosicion = { static_cast<float>(aliados[i - 1]->getRectanguloColision().X), static_cast<float>(aliados[i - 1]->getRectanguloColision().Y) };
-            formlib::Direcciones nuevaDireccion = aliados[i - 1]->getDireccion();
+        // Verificar si hay aliados para mover
+        if (!aliados.empty()) {
+            // Mover a los aliados
+            for (int i = static_cast<int>(aliados.size()) - 1; i >= 1; --i) {
+                // Obtener la posición y dirección del aliado anterior
+                formlib::Vec2 nuevaPosicion = { static_cast<float>(aliados[i - 1]->getRectanguloColision().X), static_cast<float>(aliados[i - 1]->getRectanguloColision().Y) };
+                formlib::Direcciones nuevaDireccion = aliados[i - 1]->getDireccion();
 
-            // Establecer la nueva posición y dirección para el aliado actual
-            aliados[i]->setPosicion(nuevaPosicion);
-            aliados[i]->setDireccion(nuevaDireccion);
+                // Establecer la nueva posición y dirección para el aliado actual
+                aliados[i]->setPosicion(nuevaPosicion);
+                aliados[i]->setDireccion(nuevaDireccion);
+            }
+
+            // Mover al primer aliado a la posición del robot
+            formlib::Vec2 nuevaPosicion = { static_cast<float>(robot->getRectanguloColision().X), static_cast<float>(robot->getRectanguloColision().Y) };
+            formlib::Direcciones nuevaDireccion = robot->getDireccion();
+
+            // Establecer la posición y dirección del primer aliado
+            aliados[0]->setPosicion(nuevaPosicion);
+            aliados[0]->setDireccion(nuevaDireccion);
         }
-
-        // Mover al primer aliado a la posición del robot
-        formlib::Vec2 nuevaPosicion = { static_cast<float>(robot->getRectanguloColision().X), static_cast<float>(robot->getRectanguloColision().Y) };
-        formlib::Direcciones nuevaDireccion = robot->getDireccion();
-
-        // Establecer la posición y dirección del primer aliado
-        aliados[0]->setPosicion(nuevaPosicion);
-        aliados[0]->setDireccion(nuevaDireccion);
 
         // Actualizar la posición del robot según la dirección
         robot->actualizar(graphics, direccion);
@@ -97,9 +121,12 @@ public:
 
     // Método para dibujar a los aliados y al robot
     void dibujar(System::Drawing::Graphics^ graphics, System::Drawing::Bitmap^ hojaSprites) {
-        // Dibujar a los aliados en orden inverso
-        for (int i = static_cast<int>(aliados.size()) - 1; i >= 0; --i) {
-            aliados[i]->dibujar(graphics, hojaSprites);
+        // Verificar si hay aliados para dibujar
+        if (!aliados.empty()) {
+            // Dibujar a los aliados en orden inverso
+            for (int i = static_cast<int>(aliados.size()) - 1; i >= 0; --i) {
+                aliados[i]->dibujar(graphics, hojaSprites);
+            }
         }
 
         // Dibujar al robot

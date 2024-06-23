@@ -18,15 +18,15 @@ public:
         // Movimiento del robot según la dirección especificada
         switch (direccion) {
         case formlib::Direcciones::Izquierda:
-            rectanguloColision.X -= velocidad.x;
+            rectanguloColision.X -= static_cast<int>(velocidad.x);
             // Si el robot sale del borde izquierdo, teletransportarlo al lado derecho
             if (rectanguloColision.X < 0) {
-                rectanguloColision.X = graphics->VisibleClipBounds.Width - formlib::getCelda();
+                rectanguloColision.X = static_cast<int>(graphics->VisibleClipBounds.Width - formlib::getCelda());
             }
             break;
 
         case formlib::Direcciones::Derecha:
-            rectanguloColision.X += velocidad.x;
+            rectanguloColision.X += static_cast<int>(velocidad.x);
             // Si el robot sale del borde derecho, teletransportarlo al lado izquierdo
             if (rectanguloColision.Right > graphics->VisibleClipBounds.Width) {
                 rectanguloColision.X = 0;
@@ -34,15 +34,15 @@ public:
             break;
 
         case formlib::Direcciones::Arriba:
-            rectanguloColision.Y -= velocidad.y;
+            rectanguloColision.Y -= static_cast<int>(velocidad.y);
             // Si el robot sale del borde superior, teletransportarlo al borde inferior
             if (rectanguloColision.Y < 0) {
-                rectanguloColision.Y = graphics->VisibleClipBounds.Height - formlib::getCelda();
+                rectanguloColision.Y = static_cast<int>(graphics->VisibleClipBounds.Height - formlib::getCelda());
             }
             break;
 
         case formlib::Direcciones::Abajo:
-            rectanguloColision.Y += velocidad.y;
+            rectanguloColision.Y += static_cast<int>(velocidad.y);
             // Si el robot sale del borde inferior, teletransportarlo al borde superior
             if (rectanguloColision.Bottom > graphics->VisibleClipBounds.Height) {
                 rectanguloColision.Y = 0;

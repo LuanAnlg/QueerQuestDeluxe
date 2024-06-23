@@ -13,20 +13,20 @@
 namespace formlib {
 
     // Estructura para representar un vector 2D
-    struct Vec2 {                                          
+    struct Vec2 {
         float x;  // Posición en el eje x                     
         float y;  // Posición en el eje y                     
     };
 
     // Estructura para representar un vector 3D
-    struct Vec3 {                                          
+    struct Vec3 {
         float x;  // Posición en el eje x                     
         float y;  // Posición en el eje y                     
         float z;  // Posición en el eje z                     
     };
 
     // Estructura para representar colores en formato ARGB
-    struct ARGB {                                          
+    struct ARGB {
         int a;  // Valor de Alfa [0 - 255]                     
         int r;  // Valor de Rojo [0 - 255]                     
         int g;  // Valor de Verde [0 - 255]                    
@@ -34,7 +34,7 @@ namespace formlib {
     };
 
     // Enumeración para representar direcciones
-    enum class Direcciones {                              
+    enum class Direcciones {
         Izquierda,  // Valor 0                                  
         Derecha,    // Valor 1                                  
         Arriba,     // Valor 2                                  
@@ -43,7 +43,7 @@ namespace formlib {
     };
 
     // Enumeración para representar opciones
-    enum class Opciones {                                 
+    enum class Opciones {
         A,  // Valor 0                                            
         B,  // Valor 1                                            
         C,  // Valor 2                                            
@@ -52,7 +52,7 @@ namespace formlib {
     };
 
     // Enumeración para representar tipos de personajes
-    enum class Tipos {                                   
+    enum class Tipos {
         Robot,  // Valor 0                                          
         Chico,  // Valor 1                                          
         Chica,  // Valor 2                                          
@@ -60,8 +60,15 @@ namespace formlib {
         Vacio   // Valor 4                                          
     };
 
+    // Enumeración para representar las dificultades
+    enum class Dificultades {
+        Facil,  // Valor 0
+        Dificil // Valor 1
+    };
+
     // Estructura para representar una pregunta con opciones y respuesta
-    struct Pregunta {                                     
+    struct Pregunta {
+        Opciones opcion;
         std::string pregunta;  // Texto de la pregunta, puede usar "\n" para nuevas líneas
         std::string opcionA;   // Texto de la opción A, puede usar "\n" para nuevas líneas
         std::string opcionB;   // Texto de la opción B, puede usar "\n" para nuevas líneas

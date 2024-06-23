@@ -64,7 +64,7 @@ public:
 
         // Reinicia la animación si llega al final
         if (fotogramaActual.x >= cantidadFotogramas + fotogramaInicial) {
-            fotogramaActual.x = fotogramaInicial;
+            fotogramaActual.x = static_cast<float>(fotogramaInicial);
         }
 
         System::Drawing::Rectangle fotogramaVisible =

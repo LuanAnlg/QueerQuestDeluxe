@@ -120,6 +120,7 @@
     </ClInclude>
     <ClInclude Include="Personaje.h" />
     <ClInclude Include="Robot.h" />
+    <ClInclude Include="Trivia.h" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

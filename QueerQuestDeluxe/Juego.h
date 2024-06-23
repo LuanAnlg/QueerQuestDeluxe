@@ -30,8 +30,8 @@ namespace QueerQuestDeluxe {
             grupo = new Grupo({ static_cast<float>(6 * formlib::getCelda()), static_cast<float>(3 * formlib::getCelda()) }, spritePersonajes);
 
             // Inicialización del enemigo
-            formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Right - formlib::getCelda())),
-                                              static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Bottom - formlib::getCelda())) };
+            formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
+                                              static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Bottom - formlib::getCelda()))) };
             enemigo = new Enemigo(enemigoPosicion, spritePersonajes);
 
             // Crear un personaje de prueba
@@ -108,12 +108,12 @@ namespace QueerQuestDeluxe {
 
         // Verificar si el grupo de personajes intersecta con el enemigo
         if (grupo->getRobot().getRectanguloColision().IntersectsWith(enemigo->getRectanguloColision())) {
-            grupo->agregar(spritePersonajes, enemigo->getTipo()); // Agregar nuevo aliado al grupo
+            grupo->agregarAliado(spritePersonajes, enemigo->getTipo()); // Agregar nuevo aliado al grupo
             delete enemigo; // Eliminar el enemigo actual
 
             // Crear un nuevo enemigo en una posición aleatoria dentro de los límites de la pantalla
-            formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Right - formlib::getCelda())),
-                                              static_cast<float>(formlib::getAleatorio(0, graphics->VisibleClipBounds.Bottom - formlib::getCelda())) };
+            formlib::Vec2 enemigoPosicion = { static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Right - formlib::getCelda()))),
+                                              static_cast<float>(formlib::getAleatorio(0, static_cast<int>(graphics->VisibleClipBounds.Bottom - formlib::getCelda()))) };
             enemigo = new Enemigo(enemigoPosicion, spritePersonajes);
         }
 
@@ -140,6 +140,9 @@ namespace QueerQuestDeluxe {
         }
         else if (e->KeyCode == Keys::S || e->KeyCode == Keys::Down) {
             direccion = formlib::Direcciones::Abajo;
+        }
+        else if (e->KeyCode == Keys::R) {
+            grupo->eliminarAliado();
         }
     }
     };
