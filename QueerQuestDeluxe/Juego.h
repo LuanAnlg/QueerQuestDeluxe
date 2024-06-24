@@ -3,6 +3,7 @@
 #include "Grupo.h"
 #include "Enemigo.h"
 #include "Trivia.h"
+
 #include "Preguntando.h"
 #include "Puntaje.h"
 
@@ -100,6 +101,7 @@ namespace QueerQuestDeluxe {
         System::Windows::Forms::Timer^ tiempoDelta;
         System::Windows::Forms::Label^ lbl_vidas;
         System::Windows::Forms::Label^ lbl_aliados;
+        System::Windows::Forms::Label^ lbl_preguntas;
         System::ComponentModel::IContainer^ components;
         Graphics^ graphics;
         BufferedGraphics^ buffer;
@@ -115,8 +117,7 @@ namespace QueerQuestDeluxe {
         formlib::Direcciones direccion;
         int temporizador;
         int cantidadVidas;
-    private: System::Windows::Forms::Label^ lbl_preguntas;
-           formlib::Dificultades dificultad;
+        formlib::Dificultades dificultad;
 
 #pragma region Windows Form Designer generated code
 

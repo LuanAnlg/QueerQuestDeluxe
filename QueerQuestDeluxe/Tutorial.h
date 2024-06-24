@@ -210,5 +210,5 @@ namespace QueerQuestDeluxe {
 			enemigo->dibujar(buffer->Graphics, spritePersonajes);
 			buffer->Render(graphics);
 		}
-};
+	};
 }

@@ -198,10 +198,10 @@ namespace QueerQuestDeluxe {
 			this->lbl_respuesta->Font = (gcnew System::Drawing::Font(L"Consolas", 18, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->lbl_respuesta->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->lbl_respuesta->Location = System::Drawing::Point(7, 9);
+			this->lbl_respuesta->Location = System::Drawing::Point(12, 9);
 			this->lbl_respuesta->Margin = System::Windows::Forms::Padding(10);
 			this->lbl_respuesta->Name = L"lbl_respuesta";
-			this->lbl_respuesta->Size = System::Drawing::Size(941, 450);
+			this->lbl_respuesta->Size = System::Drawing::Size(936, 450);
 			this->lbl_respuesta->TabIndex = 5;
 			this->lbl_respuesta->Text = L"RESPUESTA";
 			this->lbl_respuesta->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;

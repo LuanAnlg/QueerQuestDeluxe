@@ -147,7 +147,6 @@
   <ItemGroup>
     <ClCompile Include="formlib.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
-    <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Creditos.resx">
